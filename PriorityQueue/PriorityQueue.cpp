@@ -10,19 +10,12 @@ class PriorityQueue
 
     int get_parent_idx(int current_idx) { return (current_idx - 1) / 2; }
 
-    int get_left_child_idx(int parent_idx)
-    {
-        return 2 * parent_idx + 1;
-    }
+    int get_left_child_idx(int parent_idx) { return 2 * parent_idx + 1; }
 
-    int get_right_child_idx(int parent_idx)
-    {
-        return 2 * parent_idx + 2;
-    }
+    int get_right_child_idx(int parent_idx) { return 2 * parent_idx + 2; }
 
 public:
     PriorityQueue(int max_size) : MAX_SIZE(max_size)
-
     {
         tab = new int[MAX_SIZE];
         size = 0;
@@ -103,22 +96,3 @@ public:
         }
     }
 };
-
-int main()
-{
-    PriorityQueue priority_queue(MAX_SIZE);
-    priority_queue.insert(60);
-    priority_queue.insert(10);
-    priority_queue.insert(12);
-    priority_queue.insert(40);
-    priority_queue.insert(50);
-    priority_queue.insert(45);
-    priority_queue.insert(90);
-    priority_queue.insert(-5);
-    priority_queue.insert(22);
-    // priority_queue.print();
-
-    // Test
-    int size = priority_queue.get_size();
-    std::cout << size << std::endl;
-}
