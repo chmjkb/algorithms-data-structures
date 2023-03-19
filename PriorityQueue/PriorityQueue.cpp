@@ -1,5 +1,7 @@
 #include <iostream>
 
+const int MAX_SIZE = 30;
+
 class PriorityQueue
 {
     int size;
@@ -8,12 +10,27 @@ class PriorityQueue
 
     int get_parent_idx(int current_idx) { return (current_idx - 1) / 2; }
 
-public:
-    PriorityQueue()
+    int get_left_child_idx(int parent_idx)
     {
-        MAX_SIZE = 100;
+        return 2 * parent_idx + 1;
+    }
+
+    int get_right_child_idx(int parent_idx)
+    {
+        return 2 * parent_idx + 2;
+    }
+
+public:
+    PriorityQueue(int max_size) : MAX_SIZE(max_size)
+
+    {
         tab = new int[MAX_SIZE];
         size = 0;
+    }
+
+    int get_size()
+    {
+        return size;
     }
 
     void insert(int element_to_add)
@@ -38,31 +55,70 @@ public:
         {
             return tab[0];
         }
-        throw -1;
+        throw 1;
     }
 
     void remove_root()
     {
-        std::swap(tab[0], tab[size - 1]);
-        size--;
-        int index = 0;
-        int left_child = 2 * index + 1;
-        int right_child = 2 * index + 2;
-        while (left_child < size)
+        if (size == 0)
         {
-            int smaller_child = left_child;
-            if (right_child < size && tab[right_child] < tab[left_child])
+            throw 1;
+        }
+
+        tab[0] = tab[size - 1];
+        size--;
+
+        int current_idx = 0;
+        int left_child_idx = get_left_child_idx(current_idx);
+        int right_child_idx = get_right_child_idx(current_idx);
+
+        while (left_child_idx < size)
+        {
+            int max_child_idx = left_child_idx;
+
+            if (right_child_idx < size && tab[right_child_idx] > tab[left_child_idx])
             {
-                smaller_child = right_child;
+                max_child_idx = right_child_idx;
             }
-            if (tab[index] <= tab[smaller_child])
+
+            if (tab[current_idx] < tab[max_child_idx])
+            {
+                std::swap(tab[current_idx], tab[max_child_idx]);
+                current_idx = max_child_idx;
+                left_child_idx = get_left_child_idx(current_idx);
+                right_child_idx = get_right_child_idx(current_idx);
+            }
+            else
             {
                 break;
             }
-            std::swap(tab[index], tab[smaller_child]);
-            index = smaller_child;
-            left_child = 2 * index + 1;
-            right_child = 2 * index + 2;
+        }
+    }
+
+    void print()
+    {
+        for (int i = 0; i < size; i++)
+        {
+            std::cout << tab[i] << " " << std::endl;
         }
     }
 };
+
+int main()
+{
+    PriorityQueue priority_queue(MAX_SIZE);
+    priority_queue.insert(60);
+    priority_queue.insert(10);
+    priority_queue.insert(12);
+    priority_queue.insert(40);
+    priority_queue.insert(50);
+    priority_queue.insert(45);
+    priority_queue.insert(90);
+    priority_queue.insert(-5);
+    priority_queue.insert(22);
+    // priority_queue.print();
+
+    // Test
+    int size = priority_queue.get_size();
+    std::cout << size << std::endl;
+}
